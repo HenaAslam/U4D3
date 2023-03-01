@@ -4,11 +4,13 @@ import listEndpoints from "express-list-endpoints";
 import blogsRouter from "./api/blogs/index.js";
 import { badRequestHandler } from "./errorHandlers.js";
 import { notFoundHandler } from "./errorHandlers.js";
+import cors from "cors";
 
 const server = Express();
 server.use(Express.json());
 server.use("/authors", authorRouter);
 server.use("/blogs", blogsRouter);
+server.use(cors());
 
 server.use(badRequestHandler);
 server.use(notFoundHandler);
