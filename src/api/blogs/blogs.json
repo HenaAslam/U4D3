@@ -1,1 +1,16 @@
-{"id":"1","name":"henaaaaaaa","surname":"aslam","email":"jane@xyz.com","date of birth":"02/07/1997","avatar":"https://ui-avatars.com/api/?name=hena+aslam","updatedAt":"2023-03-01T14:09:05.777Z"}
+[
+  {
+    "category": "ARTICLE CATEGORYyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+    "title": "ARTICLE TITLEeeeeeee",
+    "cover": "https://i.pinimg.com/originals/af/59/8f/af598ff9026136c6bdf95b2acd1d7e18.jpg",
+    "readTime": { "value": 15, "unit": "minute" },
+    "author": {
+      "name": "AUTHOR AVATAR NAMEeeeeeeeeee",
+      "avatar": "AUTHOR AVATAR LINK"
+    },
+    "content": "HTML",
+    "createdAt": "2023-03-01T14:36:41.596Z",
+    "updatedAt": "2023-03-01T14:38:03.104Z",
+    "id": "1q1y4p8leps6ubh"
+  }
+]
