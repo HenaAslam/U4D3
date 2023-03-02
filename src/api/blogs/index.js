@@ -3,10 +3,10 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import uniqid from "uniqid";
-import httpErrors from "http-errors";
+
+import createHttpError from "http-errors";
 import { checkBlogSchema, triggerBadRequest } from "./validator.js";
 
-const { NotFound } = httpErrors;
 const blogsRouter = Express.Router();
 const blogsJSONPath = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -19,7 +19,14 @@ const writeBlogs = (array) =>
 blogsRouter.get("/", (req, res, next) => {
   try {
     const blogsArray = getBlogs();
-    res.send(blogsArray);
+    if (req.query && req.query.category) {
+      const filteredBlogs = blogsArray.filter(
+        (blog) => blog.category === req.query.category
+      );
+      res.send(filteredBlogs);
+    } else {
+      res.send(blogsArray);
+    }
   } catch (error) {
     next(error);
   }
@@ -32,7 +39,9 @@ blogsRouter.get("/:blogId", (req, res, next) => {
     if (blog) {
       res.send(blog);
     } else {
-      next(NotFound(`Blog with id ${req.params.blogId} is not found!`));
+      next(
+        createHttpError(404, `Blog with id ${req.params.blogId} not found!`)
+      );
     }
   } catch (error) {
     next(error);
@@ -56,6 +65,7 @@ blogsRouter.post("/", checkBlogSchema, triggerBadRequest, (req, res, next) => {
     next(error);
   }
 });
+
 blogsRouter.delete("/:blogId", (req, res, next) => {
   try {
     const blogsArray = getBlogs();
@@ -63,8 +73,14 @@ blogsRouter.delete("/:blogId", (req, res, next) => {
     const remainingBlogs = blogsArray.filter(
       (blog) => blog.id !== req.params.blogId
     );
-    writeBlogs(remainingBlogs);
-    res.status(204).send();
+    if (blogsArray.length !== remainingBlogs.length) {
+      writeBlogs(remainingBlogs);
+      res.status(204).send();
+    } else {
+      next(
+        createHttpError(404, `Blog with id ${req.params.blogId} not found!`)
+      );
+    }
   } catch (error) {
     next(error);
   }
@@ -82,7 +98,9 @@ blogsRouter.put("/:blogId", (req, res, next) => {
       writeBlogs(blogsArray);
       res.send(updatedBlog);
     } else {
-      next(NotFound(`Blog with id ${req.params.blogId} is not found!`));
+      next(
+        createHttpError(404, `Blog with id ${req.params.blogId} not found!`)
+      );
     }
   } catch (error) {
     next(error);
