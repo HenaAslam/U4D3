@@ -1,90 +1,77 @@
 import Express from "express";
-import fs from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { getAuthors, writeAuthors } from "../../lib/fs-tools.js";
 import uniqid from "uniqid";
 
 const authorRouter = Express.Router();
-// console.log("the path is", dirname(fileURLToPath(import.meta.url)));
-const authorJSONPath = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "authors.json"
-);
-// console.log("path", authorJSONPath);
 
-authorRouter.get("/", (req, res) => {
+authorRouter.get("/", async (req, res, next) => {
   try {
-    // res.send({ message: "Hello!" });
-    const fileContent = fs.readFileSync(authorJSONPath);
-    const authorArray = JSON.parse(fileContent);
-    // console.log("authors", authorArray);
+    const authorArray = await getAuthors();
+
     res.send(authorArray);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
-authorRouter.get("/:userId", (req, res) => {
-  // res.send({ message: "Hello!" });
-  // console.log(req.params.userId);
-  const fileContent = fs.readFileSync(authorJSONPath);
-  const authorArray = JSON.parse(fileContent);
-  const author = authorArray.find((author) => author.id === req.params.userId);
-  // console.log(author);
-  res.send(author);
+authorRouter.get("/:userId", async (req, res, next) => {
+  try {
+    const authorArray = await getAuthors();
+    const author = authorArray.find(
+      (author) => author.id === req.params.userId
+    );
+
+    res.send(author);
+  } catch (error) {}
 });
 
-authorRouter.post("/", (req, res) => {
+authorRouter.post("/", async (req, res, next) => {
   try {
-    // console.log("body", req.body);
     const newAuthor = {
       ...req.body,
       createdAt: new Date(),
-
+      updatedAt: new Date(),
       id: uniqid(),
     };
-    const fileContent = fs.readFileSync(authorJSONPath);
-    const authorArray = JSON.parse(fileContent);
 
-    // const checkEmail = authorArray.find(
-    //   (author) => author.email === newAuthor.email
-    // );
+    const authorArray = await getAuthors();
 
-    // if (checkEmail === undefined) {
     authorArray.push(newAuthor);
-    fs.writeFileSync(authorJSONPath, JSON.stringify(authorArray));
+    await writeAuthors(authorArray);
     res.status(201).send({ id: newAuthor.id });
-    // } else {
-    // res.send("email id exists");
-    // }
-
-    // res.send({ message: "Hello!" });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
-authorRouter.delete("/:userId", (req, res) => {
-  const fileContent = fs.readFileSync(authorJSONPath);
-  const authorArray = JSON.parse(fileContent);
-  const remainingAuthors = authorArray.filter(
-    (author) => author.id !== req.params.userId
-  );
-  fs.writeFileSync(authorJSONPath, JSON.stringify(remainingAuthors));
-  res.status(204).send();
+authorRouter.delete("/:userId", async (req, res, next) => {
+  try {
+    const authorArray = await getAuthors();
+    const remainingAuthors = authorArray.filter(
+      (author) => author.id !== req.params.userId
+    );
+    await writeAuthors(remainingAuthors);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 });
 
-authorRouter.put("/:userId", (req, res) => {
-  const fileContent = fs.readFileSync(authorJSONPath);
-  const authorArray = JSON.parse(fileContent);
-  const index = authorArray.findIndex(
-    (author) => author.id === req.params.userId
-  );
-  const oldAuthor = authorArray[index];
-  const updatedAuthor = { ...oldAuthor, ...req.body };
-  authorArray[index] = updatedAuthor;
-  fs.writeFileSync(authorJSONPath, JSON.stringify(authorArray));
-  res.send(updatedAuthor);
+authorRouter.put("/:userId", async (req, res, next) => {
+  try {
+    const authorArray = await getAuthors();
+    console.log(authorArray);
+    const index = authorArray.findIndex(
+      (author) => author.id === req.params.userId
+    );
+    const oldAuthor = authorArray[index];
+    const updatedAuthor = { ...oldAuthor, ...req.body, updatedAt: new Date() };
+    authorArray[index] = updatedAuthor;
+    await writeAuthors(authorArray);
+    res.send(updatedAuthor);
+  } catch (error) {
+    next(error);
+  }
 });
 
 authorRouter.post("/checkEmail", (req, res) => {

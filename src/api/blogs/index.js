@@ -1,24 +1,16 @@
 import Express from "express";
-import fs from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+
+import { getBlogs, writeBlogs } from "../../lib/fs-tools.js";
 import uniqid from "uniqid";
 
 import createHttpError from "http-errors";
 import { checkBlogSchema, triggerBadRequest } from "./validator.js";
 
 const blogsRouter = Express.Router();
-const blogsJSONPath = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "blogs.json"
-);
-const getBlogs = () => JSON.parse(fs.readFileSync(blogsJSONPath));
-const writeBlogs = (array) =>
-  fs.writeFileSync(blogsJSONPath, JSON.stringify(array));
 
-blogsRouter.get("/", (req, res, next) => {
+blogsRouter.get("/", async (req, res, next) => {
   try {
-    const blogsArray = getBlogs();
+    const blogsArray = await getBlogs();
     if (req.query && req.query.category) {
       const filteredBlogs = blogsArray.filter(
         (blog) => blog.category === req.query.category
@@ -32,9 +24,9 @@ blogsRouter.get("/", (req, res, next) => {
   }
 });
 
-blogsRouter.get("/:blogId", (req, res, next) => {
+blogsRouter.get("/:blogId", async (req, res, next) => {
   try {
-    const blogsArray = getBlogs();
+    const blogsArray = await getBlogs();
     const blog = blogsArray.find((blog) => blog.id === req.params.blogId);
     if (blog) {
       res.send(blog);
@@ -48,33 +40,38 @@ blogsRouter.get("/:blogId", (req, res, next) => {
   }
 });
 
-blogsRouter.post("/", checkBlogSchema, triggerBadRequest, (req, res, next) => {
-  try {
-    const newBlog = {
-      ...req.body,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: uniqid(),
-    };
-    const blogsArray = getBlogs();
-    blogsArray.push(newBlog);
+blogsRouter.post(
+  "/",
+  checkBlogSchema,
+  triggerBadRequest,
+  async (req, res, next) => {
+    try {
+      const newBlog = {
+        ...req.body,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: uniqid(),
+      };
+      const blogsArray = await getBlogs();
+      blogsArray.push(newBlog);
 
-    writeBlogs(blogsArray);
-    res.status(201).send({ id: newBlog.id });
-  } catch (error) {
-    next(error);
+      await writeBlogs(blogsArray);
+      res.status(201).send({ id: newBlog.id });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-blogsRouter.delete("/:blogId", (req, res, next) => {
+blogsRouter.delete("/:blogId", async (req, res, next) => {
   try {
-    const blogsArray = getBlogs();
+    const blogsArray = await getBlogs();
 
     const remainingBlogs = blogsArray.filter(
       (blog) => blog.id !== req.params.blogId
     );
     if (blogsArray.length !== remainingBlogs.length) {
-      writeBlogs(remainingBlogs);
+      await writeBlogs(remainingBlogs);
       res.status(204).send();
     } else {
       next(
@@ -86,17 +83,58 @@ blogsRouter.delete("/:blogId", (req, res, next) => {
   }
 });
 
-blogsRouter.put("/:blogId", (req, res, next) => {
+blogsRouter.put("/:blogId", async (req, res, next) => {
   try {
-    const blogsArray = getBlogs();
+    const blogsArray = await getBlogs();
 
     const index = blogsArray.findIndex((blog) => blog.id === req.params.blogId);
     if (index !== -1) {
       const oldBlog = blogsArray[index];
       const updatedBlog = { ...oldBlog, ...req.body, updatedAt: new Date() };
       blogsArray[index] = updatedBlog;
-      writeBlogs(blogsArray);
+      await writeBlogs(blogsArray);
       res.send(updatedBlog);
+    } else {
+      next(
+        createHttpError(404, `Blog with id ${req.params.blogId} not found!`)
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+blogsRouter.get("/:blogId/comments", async (req, res, next) => {
+  try {
+    const blogsArray = await getBlogs();
+    const blog = blogsArray.find((blog) => blog.id === req.params.blogId);
+    if (blog) {
+      res.send(blog.comments);
+    } else {
+      next(
+        createHttpError(404, `Blog with id ${req.params.blogId} not found!`)
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+blogsRouter.post("/:blogId/comments", async (req, res, next) => {
+  try {
+    const blogsArray = await getBlogs();
+    const blog = blogsArray.find((blog) => blog.id === req.params.blogId);
+    if (blog) {
+      // res.send(blog.comments);
+      const newComment = {
+        ...req.body,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: uniqid(),
+      };
+      blog.comments.push(newComment);
+      await writeBlogs(blogsArray);
+      res.status(201).send({ id: newComment.id });
     } else {
       next(
         createHttpError(404, `Blog with id ${req.params.blogId} not found!`)
