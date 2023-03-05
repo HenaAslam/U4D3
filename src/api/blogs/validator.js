@@ -7,13 +7,24 @@ const blogSchema = {
     isString: {
       errorMessage: "Category is a mandatory field and needs to be a string",
     },
+    isLength: {
+      errorMessage: "category can't be empty",
+
+      options: { min: 1 },
+    },
   },
   title: {
     in: ["body"],
     isString: {
       errorMessage: "Title is a mandatory field and needs to be a string",
     },
+    isLength: {
+      errorMessage: "title can't be empty",
+
+      options: { min: 1 },
+    },
   },
+
   cover: {
     in: ["body"],
     isString: {
@@ -25,6 +36,11 @@ const blogSchema = {
     isString: {
       errorMessage: "Content is a mandatory field and needs to be a string",
     },
+    isLength: {
+      errorMessage: "content can't be empty",
+
+      options: { min: 1 },
+    },
   },
 
   "readTime.value": {
@@ -32,6 +48,11 @@ const blogSchema = {
     isDecimal: {
       errorMessage:
         "readTime value is a mandatory field and needs to be a number",
+    },
+    isLength: {
+      errorMessage: "readtime can't be empty",
+
+      options: { min: 1 },
     },
   },
   "readTime.unit": {
@@ -46,12 +67,22 @@ const blogSchema = {
     isString: {
       errorMessage: "author name is a mandatory field and needs to be a string",
     },
+    isLength: {
+      errorMessage: "author name can't be empty",
+
+      options: { min: 1 },
+    },
   },
   "author.avatar": {
     in: ["body"],
     isString: {
       errorMessage:
         "author avatar is a mandatory field and needs to be a string",
+    },
+    isLength: {
+      errorMessage: "author avatar can't be empty",
+
+      options: { min: 1 },
     },
   },
 };
@@ -84,7 +115,7 @@ export const triggerBadRequest = (req, res, next) => {
     next();
   } else {
     next(
-      createHttpError(400, "Errors during book validation", {
+      createHttpError(400, "Errors during blog validation", {
         errorsList: errors.array(),
       })
     );
