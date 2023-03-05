@@ -1,1 +1,117 @@
-[{"category":"Blog","title":"The first blog","cover":"https://i.pinimg.com/originals/6f/88/b7/6f88b74b9e61e053eb1cd4d170e7d81e.jpg","content":"This is my first blog and I'm so tired","readTime":{"value":"5","unit":"mins"},"author":{"name":"Hena","avatar":"https://i.pinimg.com/originals/df/9f/55/df9f55089093205fef99d73f7be923ca.jpg"},"createdAt":"2023-03-02T20:58:08.439Z","updatedAt":"2023-03-02T20:58:08.439Z","id":"1q1yc8glerl98l3"},{"category":"IT","title":"why is coding so hard?","cover":"https://i.pinimg.com/736x/88/85/89/8885891a47ca2255be54002ae193ff0e.jpg","content":"bcs you're not good at it!","readTime":{"value":"10","unit":"mins"},"author":{"name":"hena","avatar":"https://i.pinimg.com/originals/df/9f/55/df9f55089093205fef99d73f7be923ca.jpg"},"createdAt":"2023-03-02T21:07:21.906Z","updatedAt":"2023-03-02T21:07:21.906Z","id":"1q1ycnslerll3n7"},{"category":"Selfcare","title":"Why is mental health important?","cover":"https://i.pinimg.com/736x/68/4a/b4/684ab4a60c4a10b6f2b7c2749611f873.jpg","content":"Mental health matters. Get some rest. :)","readTime":{"value":"20","unit":"mins"},"author":{"name":"hena","avatar":"https://i.pinimg.com/originals/df/9f/55/df9f55089093205fef99d73f7be923ca.jpg"},"createdAt":"2023-03-02T21:10:06.126Z","updatedAt":"2023-03-02T21:10:06.126Z","id":"1q1ycnslerlomcu"}]
+[
+  {
+    "category": "Who dis",
+    "title": "New Blog",
+    "cover": "http://localhost:3001/img/blogs/1q1ybsoleugebdk.jpg",
+    "content": "New blog, who dis?",
+    "readTime": { "value": 1, "unit": "min" },
+    "author": {
+      "name": "Jane",
+      "avatar": "https://i.pinimg.com/564x/37/3a/b3/373ab330faf3d82bc905c3cba7dd9bbd.jpg"
+    },
+    "createdAt": "2023-03-04T21:05:25.782Z",
+    "updatedAt": "2023-03-04T21:05:25.782Z",
+    "id": "1q1ybsoleugebdk",
+    "comments": [
+      {
+        "author": "hena",
+        "text": "woah!",
+        "createdAt": "2023-03-05T09:37:24.320Z",
+        "updatedAt": "2023-03-05T09:37:24.320Z",
+        "id": "1q1yi3klev79d29"
+      }
+    ]
+  },
+  {
+    "category": "bhhj",
+    "title": "hjhj",
+    "cover": "http://localhost:3001/img/blogs/1q1ybx0levaltff.jpg",
+    "content": "bhj",
+    "readTime": { "value": 1, "unit": "jhb" },
+    "author": { "name": "hbj", "avatar": "vhj" },
+    "createdAt": "2023-03-05T11:11:04.251Z",
+    "updatedAt": "2023-03-05T11:11:04.251Z",
+    "id": "1q1ybx0levaltff",
+    "comments": []
+  },
+  {
+    "category": "jj",
+    "title": "hi",
+    "cover": "http://localhost:3001/img/blogs/1q1ybx0levaphhr.jpg",
+    "content": "hj",
+    "readTime": { "value": 1, "unit": "j" },
+    "author": { "name": "jn", "avatar": "jbk" },
+    "createdAt": "2023-03-05T11:13:55.406Z",
+    "updatedAt": "2023-03-05T11:13:55.406Z",
+    "id": "1q1ybx0levaphhr",
+    "comments": []
+  },
+  {
+    "category": "jhj",
+    "title": "hi",
+    "cover": "http://localhost:3001/img/blogs/1q1ybx0levasadb.jpg",
+    "content": "j",
+    "readTime": { "value": 1, "unit": "jj" },
+    "author": { "name": "hj", "avatar": "k" },
+    "createdAt": "2023-03-05T11:16:06.143Z",
+    "updatedAt": "2023-03-05T11:16:06.143Z",
+    "id": "1q1ybx0levasadb",
+    "comments": []
+  },
+  {
+    "category": "hh",
+    "title": "hhhh",
+    "cover": "http://localhost:3001/img/blogs/1q1ya5wlevbnb07.jpg",
+    "content": "hh",
+    "readTime": { "value": 1, "unit": "hh" },
+    "author": { "name": "hh", "avatar": "jhh" },
+    "createdAt": "2023-03-05T11:40:13.302Z",
+    "updatedAt": "2023-03-05T11:40:13.302Z",
+    "id": "1q1ya5wlevbnb07",
+    "comments": []
+  },
+  {
+    "category": "juzzzzzzzz",
+    "title": "Juz",
+    "cover": "http://localhost:3001/img/blogs/1q1ya5wlevbrokj.jpg",
+    "content": "dfgchvjkikjehgsrfhj",
+    "readTime": { "value": 1, "unit": "hr" },
+    "author": { "name": "juzzzzzz", "avatar": "hjjhh" },
+    "createdAt": "2023-03-05T11:43:37.507Z",
+    "updatedAt": "2023-03-05T11:43:37.507Z",
+    "id": "1q1ya5wlevbrokj",
+    "comments": []
+  },
+  {
+    "category": "blog",
+    "title": "Amazing blog",
+    "cover": "http://localhost:3001/img/blogs/1q1ygaclevddrj7.jpg",
+    "content": "this is an amazing blog",
+    "readTime": { "value": "10000000", "unit": "yearsandyears" },
+    "author": { "name": "Jane", "avatar": "nope" },
+    "createdAt": "2023-03-05T12:28:47.394Z",
+    "updatedAt": "2023-03-05T12:28:47.394Z",
+    "id": "1q1ygaclevddrj7",
+    "comments": []
+  },
+  {
+    "category": "yepp",
+    "title": "happy",
+    "cover": "http://localhost:3001/img/blogs/1q1y92glevdj54t.jpg",
+    "content": "okay",
+    "readTime": { "value": 1, "unit": "yeah" },
+    "author": { "name": "woohh", "avatar": "what?" },
+    "createdAt": "2023-03-05T12:32:58.299Z",
+    "updatedAt": "2023-03-05T12:32:58.299Z",
+    "id": "1q1y92glevdj54t",
+    "comments": [
+      {
+        "author": "jangajagajaga",
+        "text": "jinjinjangadiiiii",
+        "createdAt": "2023-03-05T13:07:21.232Z",
+        "updatedAt": "2023-03-05T13:07:59.757Z",
+        "id": "1q1ydq8levercwh"
+      }
+    ]
+  }
+]

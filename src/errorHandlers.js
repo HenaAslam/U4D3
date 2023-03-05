@@ -28,10 +28,8 @@ export const notFoundHandler = (err, req, res, next) => {
 
 export const genericErrorHandler = (err, req, res, next) => {
   console.log("ERROR:", err);
-  res
-    .status(500)
-    .send({
-      success: false,
-      message: "Something happened on our side! we will fix that ASAP!",
-    });
+  res.status(500).send({
+    success: false,
+    message: "Something happened on our side! we will fix that ASAP!",
+  });
 };

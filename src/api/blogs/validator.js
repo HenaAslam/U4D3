@@ -56,6 +56,23 @@ const blogSchema = {
   },
 };
 
+const commentSchema = {
+  author: {
+    in: ["body"],
+    isString: {
+      errorMessage: "author is a mandatory field and needs to be a string",
+    },
+  },
+  text: {
+    in: ["body"],
+    isString: {
+      errorMessage: "text name is a mandatory field and needs to be a string",
+    },
+  },
+};
+
+export const checkCommentSchema = checkSchema(commentSchema);
+
 export const checkBlogSchema = checkSchema(blogSchema);
 
 export const triggerBadRequest = (req, res, next) => {
