@@ -1,6 +1,11 @@
 import Express from "express";
 
-import { getBlogs, saveBlogCover, writeBlogs } from "../../lib/fs-tools.js";
+import {
+  // deleteBlogCover,
+  getBlogs,
+  saveBlogCover,
+  writeBlogs,
+} from "../../lib/fs-tools.js";
 import uniqid from "uniqid";
 
 import createHttpError from "http-errors";
@@ -83,12 +88,15 @@ blogsRouter.post(
 blogsRouter.delete("/:blogId", async (req, res, next) => {
   try {
     const blogsArray = await getBlogs();
+    const blog = blogsArray.find((b) => b.id === req.params.blogId);
 
     const remainingBlogs = blogsArray.filter(
       (blog) => blog.id !== req.params.blogId
     );
     if (blogsArray.length !== remainingBlogs.length) {
+      // await deleteBlogCover(blog.cover);
       await writeBlogs(remainingBlogs);
+
       res.status(204).send();
     } else {
       next(

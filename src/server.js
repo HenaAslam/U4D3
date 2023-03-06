@@ -12,10 +12,26 @@ import {
   unauthorizedHandler,
 } from "./errorHandlers.js";
 const server = Express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 const publicFolderPath = join(process.cwd(), "./public");
 server.use(Express.static(publicFolderPath));
-server.use(cors());
+const whitelist = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
+server.use(
+  cors({
+    origin: (currentOrigin, corsNext) => {
+      if (!currentOrigin || whitelist.indexOf(currentOrigin) !== -1) {
+        corsNext(null, true);
+      } else {
+        corsNext(
+          createHttpError(
+            400,
+            `Origin ${currentOrigin} is not in the whitelist!`
+          )
+        );
+      }
+    },
+  })
+);
 server.use(Express.json());
 server.use("/authors", authorRouter);
 server.use("/blogs", blogsRouter);
