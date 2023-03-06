@@ -33,6 +33,7 @@ server.use(
     },
   })
 );
+
 server.use(Express.json());
 server.use("/authors", authorRouter);
 server.use("/blogs", blogsRouter);
