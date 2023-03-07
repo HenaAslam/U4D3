@@ -23,6 +23,7 @@ export const getPDFReadableStream = (blog) => {
     { text: blog.category, style: "subheader" },
     { text: blog.content, style: "subheader" },
     { text: blog.author.name, style: "subheader" },
+    //    { image: data:image/jpeg;base64,${coverBase64}},
     // { image: img },
 
     "\n\n",
