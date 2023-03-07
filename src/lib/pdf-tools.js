@@ -1,5 +1,5 @@
 import PdfPrinter from "pdfmake";
-
+import imageToBase64 from "image-to-base64";
 export const getPDFReadableStream = (blog) => {
   const fonts = {
     Courier: {
@@ -17,12 +17,13 @@ export const getPDFReadableStream = (blog) => {
   };
 
   const printer = new PdfPrinter(fonts);
-
+  //   const img = imageToBase64(blog.cover);
   const content = [
     { text: blog.title, style: "header" },
     { text: blog.category, style: "subheader" },
     { text: blog.content, style: "subheader" },
     { text: blog.author.name, style: "subheader" },
+    // { image: img },
 
     "\n\n",
   ];
