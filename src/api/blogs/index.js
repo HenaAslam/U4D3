@@ -17,6 +17,8 @@ import {
 import multer from "multer";
 import { extname } from "path";
 import { get } from "https";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const blogsRouter = Express.Router();
 // /blogPosts?title=whatever
@@ -242,24 +244,34 @@ blogsRouter.delete("/:blogId/comments/:commentId", async (req, res, next) => {
     next(error);
   }
 });
+const cloudinaryUploader = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "blogs/cover",
+    },
+  }),
+}).single("cover");
 
 blogsRouter.post(
   "/:blogId/uploadCover",
-  multer().single("cover"),
+  cloudinaryUploader,
+  // multer().single("cover"),
   async (req, res, next) => {
     try {
       if (req.file) {
         console.log("FILE:", req.file);
-        const originalFileExtension = extname(req.file.originalname);
-        const fileName = req.params.blogId + originalFileExtension;
-        await saveBlogCover(fileName, req.file.buffer);
+        // const originalFileExtension = extname(req.file.originalname);
+        // const fileName = req.params.blogId + originalFileExtension;
+        // await saveBlogCover(fileName, req.file.buffer);
         const blogsArray = await getBlogs();
         const index = blogsArray.findIndex((b) => b.id === req.params.blogId);
         if (index !== -1) {
           const oldBlog = blogsArray[index];
           const updatedBlog = {
             ...oldBlog,
-            cover: `http://localhost:3001/img/blogs/${fileName}`,
+            // cover: `http://localhost:3001/img/blogs/${fileName}`,
+            cover: req.file.path,
           };
           blogsArray[index] = updatedBlog;
           await writeBlogs(blogsArray);
