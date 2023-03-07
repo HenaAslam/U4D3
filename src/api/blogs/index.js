@@ -290,5 +290,21 @@ blogsRouter.post(
     }
   }
 );
+blogsRouter.get(":/blogId/pdf", async (req, res, next) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+});
+// filesRouter.get("/:pdf", async (req, res, next) => {
+//   res.setHeader("Content-Disposition", "attachment; filename=test.pdf")
+
+//   const books = await getBooks()
+//   const source = getPDFReadableStream(books)
+//   const destination = res
+//   pipeline(source, destination, err => {
+//     if (err) console.log(err)
+//   })
+// })
 
 export default blogsRouter;
