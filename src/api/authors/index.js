@@ -1,4 +1,4 @@
-import Express from "express";
+import express from "express";
 import { getAuthors, getBlogs, writeAuthors } from "../../lib/fs-tools.js";
 import uniqid from "uniqid";
 import { checkAuthorSchema } from "./validator.js";
@@ -8,7 +8,7 @@ import multer from "multer";
 import { extname } from "path";
 import { saveAuthorsAvatar } from "../../lib/fs-tools.js";
 
-const authorRouter = Express.Router();
+const authorRouter = express.Router();
 
 authorRouter.get("/", async (req, res, next) => {
   try {

@@ -1,4 +1,4 @@
-import Express from "express";
+import express from "express";
 import authorRouter from "./api/authors/index.js";
 import listEndpoints from "express-list-endpoints";
 import blogsRouter from "./api/blogs/index.js";
@@ -12,10 +12,10 @@ import {
   badRequestHandler,
   unauthorizedHandler,
 } from "./errorHandlers.js";
-const server = Express();
+const server = express();
 const port = process.env.PORT || 3001;
 const publicFolderPath = join(process.cwd(), "./public");
-server.use(Express.static(publicFolderPath));
+server.use(express.static(publicFolderPath));
 const whitelist = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
 server.use(
   cors({
@@ -34,7 +34,7 @@ server.use(
   })
 );
 
-server.use(Express.json());
+server.use(express.json());
 server.use("/authors", authorRouter);
 server.use("/blogs", blogsRouter);
 

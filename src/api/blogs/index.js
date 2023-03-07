@@ -1,4 +1,4 @@
-import Express from "express";
+import express from "express";
 
 import {
   // deleteBlogCover,
@@ -20,7 +20,7 @@ import { get } from "https";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
-const blogsRouter = Express.Router();
+const blogsRouter = express.Router();
 // /blogPosts?title=whatever
 blogsRouter.get(
   "/",
