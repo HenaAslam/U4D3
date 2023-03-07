@@ -1,6 +1,6 @@
 import PdfPrinter from "pdfmake";
 
-export const getPDFReadableStream = (blogsArray) => {
+export const getPDFReadableStream = (blog) => {
   const fonts = {
     Courier: {
       normal: "Courier",
@@ -18,14 +18,14 @@ export const getPDFReadableStream = (blogsArray) => {
 
   const printer = new PdfPrinter(fonts);
 
-  const content = blogsArray.map((blog) => {
-    return [
-      { text: blog.title, style: "header" },
-      { text: blog.category, style: "subheader" },
-      { text: blog.content, style: "subheader" },
-      "\n\n",
-    ];
-  });
+  const content = [
+    { text: blog.title, style: "header" },
+    { text: blog.category, style: "subheader" },
+    { text: blog.content, style: "subheader" },
+    { text: blog.author.name, style: "subheader" },
+
+    "\n\n",
+  ];
 
   const docDefinition = {
     content: [...content],

@@ -1,4 +1,5 @@
 import express from "express";
+import { pipeline } from "stream";
 
 import {
   // deleteBlogCover,
@@ -19,6 +20,7 @@ import { extname } from "path";
 import { get } from "https";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { getPDFReadableStream } from "../../lib/pdf-tools.js";
 
 const blogsRouter = express.Router();
 // /blogPosts?title=whatever
@@ -290,21 +292,19 @@ blogsRouter.post(
     }
   }
 );
-blogsRouter.get(":/blogId/pdf", async (req, res, next) => {
+blogsRouter.get("/:blogId/pdf", async (req, res, next) => {
   try {
+    res.setHeader("Content-Disposition", "attachment; filename=test.pdf");
+    const blogsArray = await getBlogs();
+    const blog = blogsArray.find((blog) => blog.id === req.params.blogId);
+    const source = getPDFReadableStream(blog);
+    const destination = res;
+    pipeline(source, destination, (err) => {
+      if (err) console.log(err);
+    });
   } catch (error) {
     next(error);
   }
 });
-// filesRouter.get("/:pdf", async (req, res, next) => {
-//   res.setHeader("Content-Disposition", "attachment; filename=test.pdf")
-
-//   const books = await getBooks()
-//   const source = getPDFReadableStream(books)
-//   const destination = res
-//   pipeline(source, destination, err => {
-//     if (err) console.log(err)
-//   })
-// })
 
 export default blogsRouter;
