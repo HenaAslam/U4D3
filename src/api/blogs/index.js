@@ -1,9 +1,10 @@
 import express from "express";
 import { pipeline } from "stream";
-
+import { Transform } from "@json2csv/node";
 import {
   // deleteBlogCover,
   getBlogs,
+  getBlogsJSONReadableStream,
   saveBlogCover,
   writeBlogs,
 } from "../../lib/fs-tools.js";
@@ -21,6 +22,7 @@ import { get } from "https";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { getPDFReadableStream } from "../../lib/pdf-tools.js";
+import { sendRegistrationEmail } from "../../lib/email-tools.js";
 
 const blogsRouter = express.Router();
 // /blogPosts?title=whatever
@@ -78,6 +80,7 @@ blogsRouter.post(
         id: uniqid(),
         comments: [],
       };
+
       const blogsArray = await getBlogs();
       blogsArray.push(newBlog);
 
@@ -309,5 +312,49 @@ blogsRouter.get("/:blogId/pdf", async (req, res, next) => {
     next(error);
   }
 });
+
+blogsRouter.post(
+  "/newpostemail",
+
+  async (req, res, next) => {
+    try {
+      const email = req.body.author.email;
+
+      await sendRegistrationEmail(email);
+
+      res.send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// filesRouter.get("/asyncPDF", async (req, res, next) => {
+//   try {
+//     // const books = await getBooks()
+//     // const source = getPDFReadableStream(books[0])
+//     // const destination = res
+
+//     // pipeline(source, destination, err => {
+//     //   if (err) console.log(err)
+//     // })
+
+//     // await sendPDFViaEmail(pdf) <-- you cannot do this because you can't be sure that the pdf generation happened successfully on this line, email will probably contain a corrupted PDF
+//     // a solution could be to put the await sendPDFViaEmail(pdf) into the pipeline callback but it's not a good idea to mix callbacks & promises
+
+//     /*
+//     1. generate the pdf by using the stream approach
+//     2. Wait for it to be completed
+//     3. Use the generated file somehow (like sendPDFViaEmail(pdf))
+
+//     */
+//     const books = await getBooks();
+//     await asyncPDFGeneration(books[1]);
+//     // await sendPDFViaEmail()
+//     res.send({ message: "PDF GENERATED CORRECTLY" });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 export default blogsRouter;

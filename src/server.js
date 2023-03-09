@@ -12,6 +12,7 @@ import {
   badRequestHandler,
   unauthorizedHandler,
 } from "./errorHandlers.js";
+import filesRouter from "./api/files/index.js";
 const server = express();
 const port = process.env.PORT || 3001;
 const publicFolderPath = join(process.cwd(), "./public");
@@ -37,6 +38,7 @@ server.use(
 server.use(express.json());
 server.use("/authors", authorRouter);
 server.use("/blogs", blogsRouter);
+server.use("/files", filesRouter);
 
 server.use(badRequestHandler);
 server.use(unauthorizedHandler);
