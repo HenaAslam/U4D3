@@ -342,7 +342,7 @@ blogsRouter.post("/email/pdf", async (req, res, next) => {
     await asyncPDFGeneration(req.body);
 
     const email = req.body.author.email;
-
+    console.log(email);
     await sendPDFViaEmail(email);
     // await sendsMailWithAttachment(email)
 
