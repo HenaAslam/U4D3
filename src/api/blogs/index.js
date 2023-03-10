@@ -1,6 +1,7 @@
 import express from "express";
 import { pipeline } from "stream";
 import { Transform } from "@json2csv/node";
+import fs from "fs";
 import {
   // deleteBlogCover,
   getBlogs,
@@ -9,7 +10,7 @@ import {
   writeBlogs,
 } from "../../lib/fs-tools.js";
 import uniqid from "uniqid";
-
+import { promisify } from "util";
 import createHttpError from "http-errors";
 import {
   checkBlogSchema,
@@ -21,8 +22,14 @@ import { extname } from "path";
 import { get } from "https";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import { getPDFReadableStream } from "../../lib/pdf-tools.js";
-import { sendRegistrationEmail } from "../../lib/email-tools.js";
+import {
+  asyncPDFGeneration,
+  getPDFReadableStream,
+} from "../../lib/pdf-tools.js";
+import {
+  sendPDFViaEmail,
+  sendRegistrationEmail,
+} from "../../lib/email-tools.js";
 
 const blogsRouter = express.Router();
 // /blogPosts?title=whatever
@@ -328,33 +335,21 @@ blogsRouter.post(
     }
   }
 );
+blogsRouter.post("/email/pdf", async (req, res, next) => {
+  try {
+    // const blogsArray = await getBlogs();
+    // const blog = blogsArray.find((blog) => blog.id === req.params.blogId);
+    await asyncPDFGeneration(req.body);
 
-// filesRouter.get("/asyncPDF", async (req, res, next) => {
-//   try {
-//     // const books = await getBooks()
-//     // const source = getPDFReadableStream(books[0])
-//     // const destination = res
+    const email = req.body.author.email;
 
-//     // pipeline(source, destination, err => {
-//     //   if (err) console.log(err)
-//     // })
+    await sendPDFViaEmail(email);
+    // await sendsMailWithAttachment(email)
 
-//     // await sendPDFViaEmail(pdf) <-- you cannot do this because you can't be sure that the pdf generation happened successfully on this line, email will probably contain a corrupted PDF
-//     // a solution could be to put the await sendPDFViaEmail(pdf) into the pipeline callback but it's not a good idea to mix callbacks & promises
-
-//     /*
-//     1. generate the pdf by using the stream approach
-//     2. Wait for it to be completed
-//     3. Use the generated file somehow (like sendPDFViaEmail(pdf))
-
-//     */
-//     const books = await getBooks();
-//     await asyncPDFGeneration(books[1]);
-//     // await sendPDFViaEmail()
-//     res.send({ message: "PDF GENERATED CORRECTLY" });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+    res.send({ message: "PDF GENERATED CORRECTLY" });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default blogsRouter;
